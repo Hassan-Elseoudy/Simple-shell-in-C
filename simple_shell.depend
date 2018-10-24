@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1540391621 source:/home/smsm/Documents/Linux-Cpp/simple_shell/main.cpp
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<unistd.h>
+	<sys/wait.h>
+
