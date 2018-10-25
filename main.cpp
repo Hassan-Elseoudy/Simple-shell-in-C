@@ -3,6 +3,9 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<sys/wait.h>
+#include <signal.h>
+#include <fstream>
+
 
 #define MAX_LINE_LENGTH 100
 #define MAX_ARGUMENTS 10
@@ -12,14 +15,18 @@
 
 using namespace std;
 
+ofstream log;
+
 char* parsed[MAX_ARGUMENTS];     //Array of argmuents
 int lastArgument;                //Last Argument
 char  line [MAX_LINE_LENGTH];    //Line
 
-bool simple_shell();
 bool readLine();
 void parseArguments();
+bool handleCommands();
 void executeArguments();
+void signalHandler(int sigNum);
+bool simple_shell();
 
 /* -----------------------------------------------------------------------------
                             Reading User Input
@@ -28,7 +35,7 @@ void executeArguments();
 ----------------------------------------------------------------------------- */
 
 bool readLine()
-{
+{   printf("semsem@shell™ -> ");
     fgets(line,100,stdin);
     line[strlen(line) - 1] = '\0';
     return (strlen(line) > 0 && line != NULL) ? true : false;
@@ -98,6 +105,7 @@ bool handleCommands()
     return false;
 }
 
+
 /* -----------------------------------------------------------------------------
                 Execute commands can be handled by execvp
     Our command can be followed by '&' or not, if it's followd by '&' we should
@@ -131,7 +139,14 @@ void executeArguments()
             perror("execvp error");
 
     /* Only wait if no ampersand */
-    found_amp == true ? simple_shell() : waitpid(pid, NULL, 0);
+    if(found_amp)
+        signal(SIGCHLD, signalHandler);
+    else
+        waitpid(pid, NULL, 0);
+}
+
+void signalHandler(int sigNum){
+    log << "Child terminated" << endl;
 }
 
 /* -----------------------------------------------------------------------------
