@@ -1,10 +1,11 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/wait.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <signal.h>
 #include <fstream>
+#include <iostream>
 
 
 #define MAX_LINE_LENGTH 100
@@ -15,7 +16,7 @@
 
 using namespace std;
 
-ofstream log;
+fstream log;
 
 char* parsed[MAX_ARGUMENTS];     //Array of argmuents
 int lastArgument;                //Last Argument
@@ -24,7 +25,7 @@ char  line [MAX_LINE_LENGTH];    //Line
 bool readLine();
 void parseArguments();
 bool handleCommands();
-void executeArguments();
+bool executeArguments();
 void signalHandler(int sigNum);
 bool simple_shell();
 
@@ -80,9 +81,11 @@ bool handleCommands()
     {
     case 1:
         puts("\nGoodbye\n");
+        log << line << " executed successfully" << endl;
         exit(0);
     case 2:
         chdir(parsed[1]);
+        log << line << " executed successfully" << endl;
         return true;
     case 3:
         puts("\n***WELCOME TO MY SHELL HELP***"
@@ -91,6 +94,7 @@ bool handleCommands()
          "\n>ls"
          "\n>exit"
          "\n>all other general commands available in UNIX shell");
+          log << line << " executed successfully" << endl;
         return true;
     case 4:
         username = getenv("USER");
@@ -98,6 +102,7 @@ bool handleCommands()
                "not a place to play around."
                "\nUse help to know more..\n",
                username);
+        log << line << " executed successfully" << endl;
         return true;
     default:
         return false;
@@ -113,7 +118,7 @@ bool handleCommands()
     parent must continue normally.
 ----------------------------------------------------------------------------- */
 
-void executeArguments()
+bool executeArguments()
 {
     pid_t pid;
     const char *amp;
@@ -135,14 +140,19 @@ void executeArguments()
 
     /* child process */
     else if (pid == 0)
-        if (execvp(*(parsed), parsed) < 0)
+        if (execvp(*(parsed), parsed) < 0){
             perror("execvp error");
+            log << line << " error occured" << endl;
+            return false;
+        }
 
     /* Only wait if no ampersand */
     if(found_amp)
         signal(SIGCHLD, signalHandler);
     else
         waitpid(pid, NULL, 0);
+
+    return true;
 }
 
 void signalHandler(int sigNum){
@@ -152,17 +162,23 @@ void signalHandler(int sigNum){
 /* -----------------------------------------------------------------------------
                         S I M P L E     S H E L L
     You can simply create a shell by readLine(), the parseArguments() and
-    execute commands if it's not handled by execvp default handler.
+    execute commands if it's not handled by execvp default handler, log file
+    whill help youu to keep track of what actions has been executed/terminated.
 ----------------------------------------------------------------------------- */
 bool simple_shell()
 {
+    log.open("log.txt",log.out | log.app);
+
     if(readLine())
         parseArguments();
 
     if (!handleCommands())
-        executeArguments();
+        if(executeArguments())
+            log << line << " executed successfully" << endl;
 
+    log.close();
     memset(&line[0], 0, sizeof(line));
+
     return true;
 }
 
