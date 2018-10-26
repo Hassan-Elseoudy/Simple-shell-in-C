@@ -121,16 +121,12 @@ bool handleCommands()
 bool executeArguments()
 {
     pid_t pid;
-    const char *amp;
-    amp = "&";
+    const char* amp = "&";
     bool found_amp = false;
 
-    /* Getting value of the last character in last argument and equal it to '\0' */
-   if (*(*(parsed + lastArgument)+(strlen(parsed[lastArgument]) - 1)) == '&')
-    {
+    /* Getting value of last argument */
+   if (strcasecmp((*(parsed + lastArgument)),amp) == 0)
         found_amp = true;
-      *(*(parsed + lastArgument)+(strlen(parsed[lastArgument]) - 1)) = '\0';
-    }
 
     /* Fork our process */
     pid = fork();

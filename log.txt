@@ -1,0 +1,33 @@
+ls executed successfully
+mkdir executed successfully
+pwd executed successfully
+cd executed successfully
+cd executed successfully
+pwd executed successfully
+ls executed successfully
+ls executed successfully
+pwd executed successfully
+   pwd executed successfully
+cd executed successfully
+firefox& error occured
+firefox executed successfully
+Child terminated
+Child terminated
+ls executed successfully
+firefox executed successfully
+firefox executed successfully
+Child terminated
+firefox executed successfully
+Child terminated
+ls executed successfully
+firefox& error occured
+firefox executed successfully
+Child terminated
+firfox executed successfully
+firfox error occured
+firefox executed successfully
+ls executed successfully
+pwd executed successfully
+ls executed successfully
+mkdir executed successfully
+cd executed successfully

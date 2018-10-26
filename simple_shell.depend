@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1540488394 source:/home/smsm/Documents/Linux-Cpp/simple_shell/main.cpp
+1540573669 source:/home/smsm/Documents/Linux-Cpp/simple_shell/main.cpp
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -7,4 +7,5 @@
 	<sys/wait.h>
 	<signal.h>
 	<fstream>
+	<iostream>
 
